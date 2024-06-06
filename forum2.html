@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Conversa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f8fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #1da1f2;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .tweet-box {
+            background-color: white;
+            border: 1px solid #e1e8ed;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .tweet-box input, .tweet-box textarea {
+            width: 100%;
+            border: 1px solid #e1e8ed;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .tweet-box button {
+            background-color: #1da1f2;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .tweets {
+            list-style-type: none;
+            padding: 0;
+        }
+        .tweet {
+            background-color: white;
+            border: 1px solid #e1e8ed;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .tweet-header {
+            font-weight: bold;
+        }
+        .tweet-header .username {
+            color: #657786;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Conversa</h1>
+        </div>
+        <div class="tweet-box">
+            <input id="name" type="text" placeholder="Nome">
+            <input id="username" type="text" placeholder="Usuário">
+            <textarea id="tweetText" rows="6" placeholder="O que está acontecendo?"></textarea>
+            <button onclick="postTweet()">Tweetar</button>
+        </div>
+        <ul id="tweets" class="tweets"></ul>
+    </div>
+    <script>
+        function postTweet() {
+            const name = document.getElementById('name').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const tweetText = document.getElementById('tweetText').value.trim();
+            
+            if (name && username && tweetText) {
+                const tweetList = document.getElementById('tweets');
+                const newTweet = document.createElement('li');
+                newTweet.className = 'tweet';
+                newTweet.innerHTML = `<div class="tweet-header">${name} <span class="username">@${username}</span></div><div>${tweetText}</div>`;
+                tweetList.insertBefore(newTweet, tweetList.firstChild);
+                
+                document.getElementById('name').value = '';
+                document.getElementById('username').value = '';
+                document.getElementById('tweetText').value = '';
+            } else {
+                alert('Por favor, preencha todos os campos.');
+            }
+        }
+    </script>
+</body>
+</html>
