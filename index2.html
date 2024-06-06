@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar da Prosa</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #6441a5; /* Roxo mais claro */
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px; /* Fonte menor e mais elegante */
+        }
+        .search-bar {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            margin-left: 20px;
+        }
+        .search-bar input[type="text"] {
+            width: 70%; /* Barra de pesquisa maior */
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin-left: 20px;
+        }
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+        .content h2 {
+            color: #8a2be2; /* Roxo mais claro */
+            font-size: 22px; /* Fonte menor e mais elegante */
+        }
+        .content p {
+            font-size: 16px; /* Fonte menor e mais elegante */
+        }
+        .message-section {
+            padding: 20px;
+            text-align: center;
+        }
+        .messages {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #fff;
+            max-width: 70%;
+            margin: 0 auto 20px;
+        }
+        .message-input {
+            width: 70%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            resize: none;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Bar da Prosa</h1>
+        <div class="search-bar">
+            <input type="text" placeholder="Pesquisar...">
+        </div>
+        <div class="profile-pic"></div>
+    </div>
+    <div class="content">
+        <h2>Bem-vindo ao Bar da Prosa</h2>
+        <p>"Qual a sua história?"</p>
+    </div>
+    <div class="message-section">
+        <div class="messages">
+            <!-- Mensagens existentes serão exibidas aqui -->
+        </div>
+        <textarea class="message-input" placeholder="Escreva sua mensagem..."></textarea>
+    </div>
+</body>
+</html>
