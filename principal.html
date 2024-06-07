@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Conversa</title>
+    <style>
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e6ecf0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            color: #14171a;
+            overflow: hidden; /* Remover overflow horizontal */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+        .header {
+            background-color: #1da1f2;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            flex-shrink: 0; /* Impedir que a barra do header diminua */
+        }
+        .tweets {
+            list-style-type: none;
+            padding: 0 10px;
+            margin: 0;
+            flex: 1; /* Ocupar o espaço restante */
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .tweet-box {
+            background-color: white;
+            border: 1px solid #e1e8ed;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-left: auto; /* Mover para a direita */
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+            background-color: #f5f8fa;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000; /* Certifique-se de que esteja na frente */
+        }
+        .tweet-box input, .tweet-box textarea {
+            width: 100%;
+            border: 1px solid #e1e8ed;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            resize: none; /* Impedir redimensionamento */
+        }
+        .tweet-box input:focus, .tweet-box textarea:focus {
+            border-color: #1da1f2;
+            outline: none;
+        }
+        .tweet-box button {
+            background-color: #1da1f2;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .tweet-box button:hover {
+            background-color: #0d95e8;
+        }
+        .tweet {
+            background-color: white;
+            border: 1px solid #e1e8ed;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            animation: slideIn 0.5s ease-out;
+            align-self: flex-start; /* Alinhar à esquerda */
+        }
+        .tweet:hover {
+            transform: translateY(-3px);
+        }
+        .tweet-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .tweet-header .username {
+            color: #657786;
+            font-weight: normal;
+            margin-left: 5px;
+        }
+        .tweet-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .tweet-footer button {
+            background: none;
+            border: none;
+            color: #1da1f2;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        .tweet-footer button:hover {
+            text-decoration: underline;
+        }
+        .tweet-footer .like-count, .tweet-footer .comment-count {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Conversa</h1>
+        </div>
+        <ul id="tweets" class="tweets"></ul>
+        <div class="tweet-box">
+            <input id="name" type="text" placeholder="Nome">
+            <input id="username" type="text" placeholder="Usuário">
+            <textarea id="tweetText" rows="3" placeholder="O que está acontecendo?"></textarea>
+            <button onclick="postTweet()">Tweetar</button>
+        </div>
+    </div>
+    <script>
+        function postTweet() {
+            const name = document.getElementById('name').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const tweetText = document.getElementById('tweetText').value.trim();
+            
+            if (name && username && tweetText) {
+                const tweetList = document.getElementById('tweets');
+                const newTweet = document.createElement('li');
+                newTweet.className = 'tweet';
+                newTweet.innerHTML = `
+                    <div class="tweet-header">${name} <span class="username">@${username}</span></div>
+                    <div>${tweetText}</div>
+                    <div class="tweet-footer">
+                        <button onclick="likeTweet(this)">
+                            Curtir <span class="like-count">0</span>
+                        </button>
+                        <button onclick="commentTweet(this)">
+                            Comentar <span class="comment-count">0</span>
+                        </button>
+                    </div>`;
+                tweetList.insertBefore(newTweet, tweetList.firstChild);
+                
+                document.getElementById('name').value = '';
+                document.getElementById('username').value = '';
+                document.getElementById('tweetText').value = '';
+            } else {
+                alert('Por favor, preencha todos os campos.');
+            }
+        }
+
+        function likeTweet(button) {
+            const likeCountSpan = button.querySelector('.like-count');
+            let likeCount = parseInt(likeCountSpan.textContent);
+            likeCountSpan.textContent = likeCount + 1;
+        }
+
+        function commentTweet(button) {
+            const commentCountSpan = button.querySelector('.comment-count');
+            let commentCount = parseInt(commentCountSpan.textContent);
+            commentCountSpan.textContent = commentCount + 1;
+        }
+    </script>
+</body>
+</html>
