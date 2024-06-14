@@ -15,38 +15,54 @@
                 opacity: 1;
             }
         }
+
+        @keyframes gradientBackground {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: url('https://via.placeholder.com/1600x900') no-repeat center center fixed;
-            background-size: cover;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             height: 100vh;
-            color: #14171a;
+            color: #663399;
             overflow: hidden;
+            background: linear-gradient(-45deg, #ff00cc, #333399, #ff99cc, #663399);
+            background-size: 400% 400%;
+            animation: gradientBackground 15s ease infinite;
         }
+
         .container {
             display: flex;
             flex-direction: column;
             height: 100%;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
+            padding-top: 50px;
+            align-items: center; /* Centralizar conteúdo verticalmente */
         }
-        .header {
-            background-color: #1da1f2;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px;
-            flex-shrink: 0;
+
+        .logo {
+            margin-bottom: 20px;
         }
+
+        .logo img {
+            max-width: 100%; /* Ajustar tamanho máximo da logo */
+            height: auto; /* Manter proporção */
+        }
+
         .tweets {
             list-style-type: none;
-            padding: 0 10px;
+            padding: 0;
             margin: 0;
             flex: 1;
             overflow-x: auto;
@@ -56,6 +72,7 @@
             flex-wrap: nowrap;
             white-space: nowrap;
         }
+
         .tweet-box {
             background-color: #f5f8fa;
             border-top: 1px solid #e1e8ed;
@@ -69,8 +86,9 @@
             z-index: 1000;
             background-color: rgba(255, 255, 255, 0.9);
         }
+
         .tweet-box textarea {
-            width: 100%;
+            flex: 1;
             border: 1px solid #e1e8ed;
             padding: 10px;
             border-radius: 20px;
@@ -78,13 +96,16 @@
             transition: border-color 0.3s;
             resize: none;
             margin-right: 10px;
+            color: #663399;
         }
+
         .tweet-box textarea:focus {
-            border-color: #1da1f2;
+            border-color: #663399;
             outline: none;
         }
+
         .tweet-box button {
-            background-color: #1da1f2;
+            background-color: #663399;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -93,9 +114,11 @@
             font-size: 16px;
             transition: background-color 0.3s;
         }
+
         .tweet-box button:hover {
-            background-color: #0d95e8;
+            background-color: #552b8a;
         }
+
         .tweet {
             background-color: white;
             border: 1px solid #e1e8ed;
@@ -109,53 +132,67 @@
             box-sizing: border-box;
             display: inline-block;
             vertical-align: top;
+            color: #663399;
         }
+
         .tweet:hover {
             transform: translateY(-3px);
         }
+
         .tweet-header {
             font-weight: bold;
             margin-bottom: 5px;
+            color: #663399;
         }
+
         .tweet-header .username {
-            color: #657786;
+            color: #552b8a;
             font-weight: normal;
             margin-left: 5px;
         }
+
         .tweet-footer {
             display: flex;
             justify-content: space-between;
             margin-top: 10px;
         }
+
         .tweet-footer button {
             background: none;
             border: none;
-            color: #1da1f2;
+            color: #663399;
             cursor: pointer;
             font-size: 14px;
             display: flex;
             align-items: center;
         }
+
         .tweet-footer button:hover {
             text-decoration: underline;
         }
+
         .tweet-footer .like-count, .tweet-footer .comment-count {
             margin-left: 5px;
         }
+
         .comments {
             margin-top: 10px;
-            display: none; /* Hidden by default */
+            display: none;
         }
+
         .comments textarea {
-            width: 100%;
+            width: calc(100% - 80px); /* Reduzir a largura do botão */
             border: 1px solid #e1e8ed;
             padding: 10px;
             border-radius: 10px;
             font-size: 14px;
             margin-top: 10px;
+            color: #663399;
         }
+
         .comments button {
-            background-color: #1da1f2;
+            width: 70px; /* Ajustar a largura do botão */
+            background-color: #663399;
             color: white;
             border: none;
             padding: 5px 10px;
@@ -164,26 +201,34 @@
             font-size: 14px;
             margin-top: 5px;
         }
+
         .comments button:hover {
-            background-color: #0d95e8;
+            background-color: #552b8a;
         }
+
         .comment {
             background-color: #f5f8fa;
             border: 1px solid #e1e8ed;
             padding: 10px;
             border-radius: 10px;
             margin-top: 5px;
+            color: #663399;
+        }
+
+        .comment-header {
+            font-weight: bold;
+            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Conversa</h1>
+        <div class="logo">
+            <img src="logo.png" alt="Logo">
         </div>
         <ul id="tweets" class="tweets"></ul>
         <div class="tweet-box">
-            <textarea id="tweetText" rows="1" placeholder="O que está acontecendo?"></textarea>
+            <textarea id="tweetText" rows="1" placeholder="O que está acontecendo?" onkeydown="if(event.keyCode==13) postTweet();"></textarea>
             <button onclick="postTweet()">Tweetar</button>
         </div>
     </div>
@@ -207,11 +252,11 @@
                         </button>
                     </div>
                     <div class="comments">
-                        <textarea rows="1" placeholder="Escreva um comentário..."></textarea>
+                        <textarea rows="1" placeholder="Escreva um comentário..." onkeydown="if(event.keyCode==13) postComment(this);" style="margin-top: 10px;"></textarea>
                         <button onclick="postComment(this)">Comentar</button>
                         <div class="comment-list"></div>
                     </div>`;
-                tweetList.appendChild(newTweet); // Adicionar ao final da lista
+                tweetList.appendChild(newTweet);
                 
                 document.getElementById('tweetText').value = '';
             } else {
@@ -239,16 +284,14 @@
             if (commentText) {
                 const newComment = document.createElement('div');
                 newComment.className = 'comment';
-                newComment.textContent = commentText;
+                newComment.innerHTML = `
+                    <div class="comment-header">Usuário</div>
+                    <div>${commentText}</div>`;
                 commentList.appendChild(newComment);
 
                 const commentCountSpan = commentsSection.previousElementSibling.querySelector('.comment-count');
                 let commentCount = parseInt(commentCountSpan.textContent);
-                commentCountSpan.textContent = commentCount + 1;
-
-                commentsSection.querySelector('textarea').value = '';
-            } else {
-                alert('Por favor, escreva um comentário.');
+                commentCountSpan.textContent
             }
         }
     </script>
