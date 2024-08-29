@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Conversa - Estilo Alinhado</title>
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            max-width: 800px;
+            align-items: flex-start;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #1c1c1c;
+            border: 1px solid #444;
+            border-radius: 10px;
+        }
+
+        .tweets {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            flex: 1;
+            overflow-y: auto;
+            width: 100%;
+            background-color: #2c2c2c;
+            border-radius: 10px;
+            padding: 10px;
+            color: #ffffff;
+        }
+
+        .tweet-box {
+            background-color: #333333;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            bottom: 20px;
+            width: 50%;
+            max-width: 800px;
+            box-sizing: border-box;
+            border-radius: 10px;
+        }
+
+        .tweet-box textarea {
+            width: 100%;
+            background-color: #222222;
+            border: 1px solid #444; 
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: none;
+            color: #ffffff;
+            box-sizing: border-box;
+            margin-right: 10px;
+            height: 60px;
+        }
+
+        .tweet-box textarea:focus {
+            outline: none;
+            border-color: #444; 
+        }
+
+        .tweet-box button {
+            background-color: #444444;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .tweet-box button:hover {
+            background-color: #666666;
+        }
+
+        .tweet {
+            background-color: #333333;
+            color: #ffffff;
+            font-size: 14px;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            animation: fadeIn 0.5s ease-out;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .tweet-header {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .time {
+            margin-left: 10px;
+            font-size: 12px;
+            color: #aaaaaa;
+        }
+
+        .tweet-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <ul id="tweets" class="tweets"></ul>
+        <div class="tweet-box">
+            <textarea id="tweetText" rows="1" placeholder="O que está acontecendo?" onkeydown="if(event.keyCode==13 && !event.shiftKey) {event.preventDefault(); postTweet();}"></textarea>
+            <button onclick="postTweet()">Tweetar</button>
+        </div>
+    </div>
+    <script>
+        function postTweet() {
+            const tweetText = document.getElementById('tweetText').value.trim();
+            const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            if (tweetText) {
+                const tweetList = document.getElementById('tweets');
+                const newTweet = document.createElement('li');
+                newTweet.className = 'tweet';
+                newTweet.innerHTML = `
+                    <div class="tweet-header">
+                        Usuário<span class="time">${currentTime}</span>
+                    </div>
+                    <div class="tweet-content">
+                        <div>${tweetText}</div>
+                    </div>`;
+                tweetList.appendChild(newTweet);
+                
+                document.getElementById('tweetText').value = '';
+            } else {
+                alert('Por favor, escreva uma mensagem.');
+            }
+        }
+    </script>
+</body>
+</html>
