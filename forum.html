@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twitter Clone</title>
+  <style>
+    /* Estilos básicos e layout */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      background-color: #121212; /* Fundo escuro */
+      color: #e0e0e0; /* Texto claro */
+    }
+    .container {
+      display: flex;
+      width: 100%;
+      max-width: 1280px;
+    }
+    /* Sidebar Esquerda */
+    .sidebar {
+      width: 20%;
+      padding: 20px;
+      background-color: #1e1e1e; /* Fundo da sidebar */
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      border-right: 1px solid #333; /* Borda clara */
+    }
+    .logo {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .logo img {
+      width: 150px;
+    }
+    /* Timeline Principal */
+    .main {
+      width: 50%;
+      background-color: #1e1e1e; /* Fundo principal */
+      border-left: 1px solid #333; /* Borda clara */
+      border-right: 1px solid #333; /* Borda clara */
+      padding: 15px;
+      position: relative;
+    }
+    /* Botão principal */
+    #main-button {
+      background-color: #1da1f2;
+      color: #ffffff;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      cursor: pointer;
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, background-color 0.3s;
+    }
+    #main-button:hover {
+      transform: scale(1.1);
+      background-color: #1a91da;
+    }
+    /* Botões adicionais */
+    #extra-buttons {
+      display: none;
+      position: fixed;
+      bottom: 90px;
+      right: 30px;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .extra-button {
+      background-color: #ffffff;
+      color: #1da1f2;
+      padding: 10px 20px;
+      border: 1px solid #1da1f2;
+      border-radius: 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .extra-button:hover {
+      background-color: #1da1f2;
+      color: #ffffff;
+    }
+    /* Caixa de título e mensagem */
+    .upload-box {
+      display: none;
+      margin-top: 20px;
+      border: 1px solid #333; /* Borda clara */
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .title-input, .message-input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: 1px solid #333; /* Borda clara */
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+      background-color: #2a2a2a; /* Fundo claro para input */
+      color: #e0e0e0; /* Texto claro */
+    }
+    .title-input:focus, .message-input:focus {
+      border-color: #1da1f2; /* Borda azul ao focar */
+      outline: none;
+    }
+    .title-input {
+      font-weight: bold;
+    }
+    .message-input {
+      height: 100px;
+      resize: vertical;
+    }
+    /* Estilo de tweets */
+    .tweets {
+      padding: 15px;
+    }
+    .tweet {
+      padding: 15px 0;
+      border-bottom: 1px solid #333; /* Borda clara */
+      display: flex;
+      flex-direction: column;
+    }
+    .tweet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .tweet h3 {
+      font-size: 16px;
+      font-weight: bold;
+      color: #1da1f2; /* Nome do usuário em azul */
+      margin-bottom: 5px;
+    }
+    .tweet p {
+      font-size: 15px;
+      color: #b0b0b0; /* Texto mais claro */
+    }
+    .tweet img {
+      border-radius: 10px;
+      max-width: 100%;
+      margin-top: 10px;
+    }
+    .tweet-actions {
+      display: flex;
+      gap: 20px;
+      margin-top: 10px;
+      align-items: center;
+    }
+    .tweet-actions button {
+      background: none;
+      border: none;
+      color: #1da1f2;
+      cursor: pointer;
+      font-size: 14px;
+      transition: color 0.3s;
+    }
+    .tweet-actions button:hover {
+      color: #0f1419;
+    }
+    .tweet-count {
+      font-size: 14px;
+      color: #b0b0b0; /* Texto mais claro */
+      margin-left: 5px;
+    }
+    /* Página de comentários */
+    #comment-section {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      background-color: #1e1e1e; /* Fundo da seção de comentários */
+      border: 1px solid #333; /* Borda clara */
+      border-radius: 8px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+      z-index: 100;
+    }
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: none;
+      z-index: 99;
+    }
+    .comment-input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: 1px solid #333; /* Borda clara */
+      border-radius: 8px;
+      background-color: #2a2a2a; /* Fundo claro para input */
+      color: #e0e0e0; /* Texto claro */
+      resize: vertical;
+    }
+    .comment-input:focus {
+      border-color: #1da1f2; /* Borda azul ao focar */
+      outline: none;
+    }
+    .comment {
+      margin-bottom: 10px;
+      border-bottom: 1px solid #333; /* Borda clara */
+      padding: 10px 0;
+    }
+    .close-button {
+      background-color: #1da1f2;
+      color: #ffffff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      float: right;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    .close-button:hover {
+      background-color: #1a91da;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar Esquerda -->
+    <div class="sidebar">
+      <div class="logo">
+        <img src="logo.jpg" alt="Logo do Twitter">
+      </div>
+    </div>
+
+    <!-- Timeline Principal -->
+    <div class="main">
+      <!-- Botão principal -->
+      <button id="main-button" onclick="toggleExtraButtons()">+</button>
+
+      <!-- Botões adicionais (Upload de imagem e Escrever mensagem) -->
+      <div id="extra-buttons">
+        <button class="extra-button" onclick="showImageUpload()">Adicionar imagem</button>
+        <button class="extra-button" onclick="showTextInput()">Escrever mensagem</button>
+      </div>
+
+      <!-- Caixa de título, upload e mensagem -->
+      <div class="upload-box" id="upload-box">
+        <input type="text" id="title-input" class="title-input" value="@usuario" readonly>
+        <textarea id="message-input" class="message-input" placeholder="Escreva sua mensagem aqui..."></textarea>
+        <input type="file" id="image-upload" accept="image/*" style="display:none;">
+        <button class="extra-button" onclick="addTweet()">Publicar</button>
+      </div>
+
+      <!-- Seção de tweets -->
+      <div class="tweets" id="tweets-container">
+        <!-- Tweets serão inseridos aqui -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Seção de comentários -->
+  <div id="overlay"></div>
+  <div id="comment-section">
+    <button class="close-button" onclick="hideComments()">X</button>
+    <h3>Comentários</h3>
+    <textarea id="comment-input" class="comment-input" placeholder="Escreva um comentário..."></textarea>
+    <button class="extra-button" onclick="addComment()">Comentar</button>
+    <div id="comments-container"></div>
+  </div>
+
+  <script>
+    let currentTweet;
+
+    function toggleExtraButtons() {
+      const extraButtons = document.getElementById("extra-buttons");
+      extraButtons.style.display = extraButtons.style.display === "flex" ? "none" : "flex";
+    }
+
+    function showImageUpload() {
+      document.getElementById("upload-box").style.display = "block";
+      document.getElementById("image-upload").style.display = "block";
+      document.getElementById("title-input").style.display = "block";
+      document.getElementById("message-input").style.display = "block";
+    }
+
+    function showTextInput() {
+      document.getElementById("upload-box").style.display = "block";
+      document.getElementById("image-upload").style.display = "block";
+      document.getElementById("title-input").style.display = "block";
+      document.getElementById("message-input").style.display = "block";
+    }
+
+    function addTweet() {
+      const messageInput = document.getElementById("message-input").value.trim();
+      const imageUpload = document.getElementById("image-upload");
+      const tweetsContainer = document.getElementById("tweets-container");
+
+      if (messageInput || imageUpload.files.length > 0) {
+        const tweetContainer = document.createElement("div");
+        tweetContainer.classList.add("tweet");
+
+        const date = new Date().toLocaleString();
+
+        let tweetContent = `
+          <div class="tweet-header">
+            <h3>@usuario</h3>
+            <span>${date}</span>
+          </div>
+          ${messageInput ? `<p>${messageInput}</p>` : ""}
+        `;
+
+        if (imageUpload.files.length > 0) {
+          const img = URL.createObjectURL(imageUpload.files[0]);
+          tweetContent += `<img src="${img}" alt="Tweet Image">`;
+        }
+
+        tweetContent += `
+          <div class="tweet-actions">
+            <button onclick="likeTweet(this)">Curtir <span class="tweet-count">0</span></button>
+            <button onclick="showComments(this)">Comentar <span class="tweet-count">0</span></button>
+          </div>
+        `;
+        tweetContainer.innerHTML = tweetContent;
+
+        tweetsContainer.prepend(tweetContainer);
+
+        document.getElementById("message-input").value = "";
+        imageUpload.value = "";
+        document.getElementById("upload-box").style.display = "none";
+        toggleExtraButtons();
+      }
+    }
+
+    function likeTweet(button) {
+      let countSpan = button.querySelector(".tweet-count");
+      let currentCount = parseInt(countSpan.textContent);
+      countSpan.textContent = currentCount + 1;
+    }
+
+    function showComments(tweetElement) {
+      const commentSection = document.getElementById("comment-section");
+      const overlay = document.getElementById("overlay");
+      commentSection.style.display = "block";
+      overlay.style.display = "block";
+      currentTweet = tweetElement.closest(".tweet");
+    }
+
+    function hideComments() {
+      const commentSection = document.getElementById("comment-section");
+      const overlay = document.getElementById("overlay");
+      commentSection.style.display = "none";
+      overlay.style.display = "none";
+      document.getElementById("comments-container").innerHTML = ''; // Limpa comentários
+    }
+
+    function addComment() {
+      const commentInput = document.getElementById("comment-input").value.trim();
+      const commentsContainer = document.getElementById("comments-container");
+
+      if (commentInput) {
+        const commentDiv = document.createElement("div");
+        commentDiv.classList.add("comment");
+        commentDiv.textContent = commentInput;
+        commentsContainer.appendChild(commentDiv);
+
+        document.getElementById("comment-input").value = "";
+
+        // Atualiza o contador de comentários
+        const commentButton = currentTweet.querySelector(".tweet-actions button:last-child .tweet-count");
+        let commentCount = parseInt(commentButton.textContent);
+        commentButton.textContent = commentCount + 1;
+      }
+    }
+  </script>
+</body>
+</html>
